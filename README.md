@@ -4,4 +4,4 @@ This Jupyter notebook and streamlit app automate the calculations required for t
 
 It will generate the following output: best fit line slope and intercept and also the errors in these values, and also a sample plot to get an idea of the scale to be chosen for drawing the plot.
 
-[Website link](https://physics-lab-calculations.streamlit.app/)
+<a href="https://physics-lab-calculations.streamlit.app/" target="_blank">Streamlit App Link</a>
