@@ -1,8 +1,6 @@
 # IMPORT DEPENDANCIES
 import pandas as pd
-import plotly.offline as pyo
 import plotly.graph_objects as go
-pyo.init_notebook_mode(connected=True)
 import streamlit as st
 
 # FUNCTIONS
