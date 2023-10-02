@@ -6,6 +6,7 @@ import streamlit as st
 # FUNCTIONS
 def take_input():
     st.title('Physics Lab Line of Best Fit Calculation, Error Analysis and Plotting')
+    st.subheader('Enter your observed data: ')
     num_points = st.text_input('Enter the number of data points observed: ', placeholder='2')
 
     x_values_input = st.text_input('Enter X values separated by spaces: ', placeholder='1 2')
