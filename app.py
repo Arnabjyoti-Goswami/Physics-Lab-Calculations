@@ -9,7 +9,7 @@ def take_input():
     num_points = st.text_input('Enter the number of data points observed: ', placeholder='2')
 
     x_values_input = st.text_input('Enter X values separated by spaces: ', placeholder='1 2')
-    y_values_input = st.text_input('Enter Y values separated by spaces: ', placeholder='7 40')
+    y_values_input = st.text_input('Enter Y values separated by spaces: ', placeholder='3 5')
 
     return num_points, x_values_input, y_values_input
 
