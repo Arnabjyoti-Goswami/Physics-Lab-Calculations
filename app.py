@@ -44,10 +44,10 @@ def best_fit_line(df):
     c = y_bar - m * x_bar
 
     st.subheader('The required data for the line of best fit is: ')
-    st.write('x_bar = ', x_bar)
-    st.write('y_bar = ', y_bar)
-    st.write('m = ', m)
-    st.write('c = ', c, '\n\n')
+    st.latex(r'\bar{x} = \textcolor{lightgreen}{' + str(x_bar) + '}')
+    st.latex(r'\bar{y} = \textcolor{lightgreen}{' + str(y_bar) + '}')
+    st.latex(r'm = \frac{\sum{(x_i-\bar{x})y_i}}{\sum{{(x_i-\bar{x})}^2}} = \textcolor{lightgreen}{' + str(m) + '}')
+    st.latex(r'c = \bar{y} - m\bar{x} = \textcolor{lightgreen}{' + str(c) + '}')
     st.write(df)
     return {'x_bar': x_bar, 'y_bar': y_bar, 'm': m, 'c': c, 'df': df}
 
@@ -64,10 +64,10 @@ def find_errors(df, x_bar, m, c):
     delta_c = delta_c ** 0.5
 
     st.subheader('The required data for the error analysis part is: ')
-    st.write('N = ', N)
-    st.write('D = ', D)
-    st.write('delta_m = ', delta_m)
-    st.write('delta_c = ', delta_c, '\n\n')
+    st.latex(r'N = \textcolor{lightgreen}{' + str(N) + '}')
+    st.latex(r'D = \textcolor{lightgreen}{' + str(D) + '}')
+    st.latex(r'\Delta m \approx \sqrt{\frac{\sum{S_i^2}}{D(N-2)}} = \textcolor{lightgreen}{' + str(delta_m) + '}')
+    st.latex(r'\Delta c \approx \sqrt{\left(\frac1N + \frac{\bar{x}^2}D\right)\frac{\sum{S_i^2}}{(N-2)}} = \textcolor{lightgreen}{' + str(delta_c) + '}')
     st.write(df)
     return df
 
