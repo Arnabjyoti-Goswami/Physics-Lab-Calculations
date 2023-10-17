@@ -26,21 +26,21 @@ def convert_input_to_df(num_points, x_values_input, y_values_input):
 
     data = {
         'S. No.': list(range(1, num_points + 1)),
-        'X': x_values,
-        'Y': y_values
+        'x': x_values,
+        'y': y_values
     }
     df = pd.DataFrame(data)
     df.set_index('S. No.', inplace=True)
     return df
 
 def best_fit_line(df):
-    x_bar = df['X'].mean()
-    y_bar = df['Y'].mean()
+    x_bar = df['x'].mean()
+    y_bar = df['y'].mean()
 
-    df['(x_i - x_bar) * yi'] = (df['X'] - x_bar) * df['Y']
-    df['(x_i - x_bar)^2'] = (df['X'] - x_bar) ** 2
+    df['(xᵢ - x̄)yᵢ'] = (df['x'] - x_bar) * df['y']
+    df['(xᵢ - x̄)²'] = (df['x'] - x_bar) ** 2
 
-    m = df['(x_i - x_bar) * yi'].sum() / df['(x_i - x_bar)^2'].sum()
+    m = df['(xᵢ - x̄)yᵢ'].sum() / df['(xᵢ - x̄)²'].sum()
     c = y_bar - m * x_bar
 
     st.subheader('The required data for the line of best fit is: ')
@@ -48,18 +48,20 @@ def best_fit_line(df):
     st.latex(r'\bar{y} = \textcolor{lightgreen}{' + str(y_bar) + '}')
     st.latex(r'm = \frac{\sum{(x_i-\bar{x})y_i}}{\sum{{(x_i-\bar{x})}^2}} = \textcolor{lightgreen}{' + str(m) + '}')
     st.latex(r'c = \bar{y} - m\bar{x} = \textcolor{lightgreen}{' + str(c) + '}')
-    st.write(df)
+
+    display_html_df(df)
+
     return {'x_bar': x_bar, 'y_bar': y_bar, 'm': m, 'c': c, 'df': df}
 
 def find_errors(df, x_bar, m, c):
-    df['(S_i)^2'] = (df['Y'] - m * df['X'] - c) ** 2
+    df['Sᵢ²'] = (df['y'] - m * df['x'] - c) ** 2
     N = len(df)
-    D = df['(x_i - x_bar)^2'].sum() 
+    D = df['(xᵢ - x̄)²'].sum() 
 
-    delta_m = df['(S_i)^2'].sum() / (D * (N-2))
+    delta_m = df['Sᵢ²'].sum() / (D * (N-2))
     delta_m = delta_m ** 0.5
 
-    delta_c = df['(S_i)^2'].sum() * ( (1/N) + ((x_bar ** 2) / D) )
+    delta_c = df['Sᵢ²'].sum() * ( (1/N) + ((x_bar ** 2) / D) )
     delta_c /= (N - 2)
     delta_c = delta_c ** 0.5
 
@@ -68,14 +70,50 @@ def find_errors(df, x_bar, m, c):
     st.latex(r'D = \textcolor{lightgreen}{' + str(D) + '}')
     st.latex(r'\Delta m \approx \sqrt{\frac{\sum{S_i^2}}{D(N-2)}} = \textcolor{lightgreen}{' + str(delta_m) + '}')
     st.latex(r'\Delta c \approx \sqrt{\left(\frac1N + \frac{\bar{x}^2}D\right)\frac{\sum{S_i^2}}{(N-2)}} = \textcolor{lightgreen}{' + str(delta_c) + '}')
-    st.write(df)
+    
+    display_html_df(df)
+
     return df
+
+
+def display_html_df(dataframe):
+    # Get the index name
+    index_name = dataframe.index.name if dataframe.index.name else 'Index'
+
+    # Begin the HTML table
+    html_table = '<table style="text-align: center; margin: 0 auto;">'
+
+    # Add the table header with bold column headings, including the index name
+    html_table += '<thead>'
+    html_table += '<tr>'
+    html_table += f'<th style="font-weight: bold;">{index_name}</th>'
+    for column in dataframe.columns:
+        html_table += f'<th style="font-weight: bold;">{column}</th>'
+    html_table += '</tr>'
+    html_table += '</thead>'
+
+    # Add the table body with centered elements, including the index
+    html_table += '<tbody>'
+    for index, row in dataframe.iterrows():
+        html_table += '<tr>'
+        html_table += f'<td>{index}</td>'
+        for value in row:
+            html_table += f'<td>{value}</td>'
+        html_table += '</tr>'
+    html_table += '</tbody>'
+
+    # Close the HTML table
+    html_table += '</table>'
+
+    # Display the HTML table in the Streamlit app
+    st.markdown(html_table, unsafe_allow_html=True)
+    st.markdown("") # Add a space of 1 line after the html table
 
 def plot_graph(df, m, c):
     st.subheader('Plot and see the figure so that you can get an idea of the scale to choose for the graph')
 
-    scatter = go.Scatter(x=df['X'], y=df['Y'], mode='markers',  name='Data Points', marker=dict(color='red'))
-    best_fit_line = go.Scatter(x=df['X'], y=m * df['X'] + c, mode='lines', name='Best-Fit Line', line=dict(color='blue'))
+    scatter = go.Scatter(x=df['x'], y=df['y'], mode='markers',  name='Data Points', marker=dict(color='red'))
+    best_fit_line = go.Scatter(x=df['x'], y=m * df['x'] + c, mode='lines', name='Best-Fit Line', line=dict(color='blue'))
 
     layout = go.Layout(
         title = {'text': 'Scatter Plot with Best-Fit Line','x': 0.35, 'y': 0.95, 'font': {'size': 19, 'color': 'black', 'family': 'Arial-Bold'}},
